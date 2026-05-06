@@ -37,6 +37,27 @@ def _load_markdown_files() -> list[dict]:
     logger.info("Total markdown files loaded: %d", len(files_loaded))
     return files_loaded
 
+def _filter_relevant_files(query: str, files: list[dict]) -> list[dict]:
+    query_words = query.lower().split()
+    relevant_files = []
+    
+    for file in files:
+        content_lower = file.get("content", "").lower()
+        if any(word in content_lower for word in query_words):
+            relevant_files.append(file)
+            
+        if len(relevant_files) >= 3:
+            break
+            
+    if not relevant_files:
+        relevant_files = files[:2]
+        
+    logger.info("Found %d relevant files", len(relevant_files))
+    for f in relevant_files:
+        logger.info("Selected file: %s", f.get("path"))
+        
+    return relevant_files
+
 def build_context(query: str) -> list[dict]:
     """
     Builds the context for a given query.
@@ -46,7 +67,8 @@ def build_context(query: str) -> list[dict]:
     context = [_create_query_context(query)]
 
     md_files = _load_markdown_files()
-    context.extend(md_files)
+    relevant_files = _filter_relevant_files(query, md_files)
+    context.extend(relevant_files)
 
     logger.info("Context size: %d", len(context))
 
