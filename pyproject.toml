@@ -1,0 +1,13 @@
+[project]
+name = "ai_orchestrator"
+version = "0.1.0"
+description = "A production-ready AI Orchestrator using clean architecture"
+requires-python = ">=3.11"
+authors = [
+    { name = "Senior Python Backend Architect" }
+]
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
